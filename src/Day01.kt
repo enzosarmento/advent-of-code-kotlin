@@ -1,7 +1,7 @@
 import kotlin.math.abs
 
 fun main() {
-    fun part1(input: List<String>): Pair<MutableList<Int>, MutableList<Int>> {
+    fun part1(input: List<String>): Int {
         val list1 = mutableListOf<Int>()
         val list2 = mutableListOf<Int>()
         for (i in input.indices) {
@@ -11,18 +11,38 @@ fun main() {
         }
         list1.sort()
         list2.sort()
-        return Pair(list1, list2)
-    }
+        val pair = Pair(list1, list2)
 
-    fun part2(input: Pair<List<Int>, List<Int>>): Int {
         var sum = 0
         for (i in 0..<1000) {
-            sum += abs(input.first[i] - input.second[i])
+            sum += abs(pair.first[i] - pair.second[i])
         }
         return sum
     }
 
+    fun part2(input: List<String>): Int {
+        val list1 = mutableListOf<Int>()
+        val list2 = mutableListOf<Int>()
+        for (i in input.indices) {
+            val values = input[i].split(" ")
+            list1.add(values[0].toInt())
+            list2.add(values[values.size - 1].toInt())
+        }
+
+        var score = 0
+        for (i in list1.indices) {
+            var similarity = 0
+            list2.forEach {
+                if (list1[i] == it) {
+                    similarity++
+                }
+            }
+            score += list1[i] * similarity
+        }
+        return score
+    }
+
     val input = readInput("Day01")
-    val p1 = part1(input)
-    part2(p1).println()
+    part1(input).println()
+    part2(input).println()
 }
