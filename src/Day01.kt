@@ -1,44 +1,42 @@
 import kotlin.math.abs
 
+private fun pairList(input: List<String>): List<Pair<Int, Int>> {
+    val list1 = mutableListOf<Int>()
+    val list2 = mutableListOf<Int>()
+    input.map { it.split(" ") }.forEach {
+        list1.add(it.first().toInt())
+        list2.add(it.last().toInt())
+    }
+    list1.sort()
+    list2.sort()
+    return list1.zip(list2)
+}
+
+
 fun main() {
     fun part1(input: List<String>): Int {
-        val list1 = mutableListOf<Int>()
-        val list2 = mutableListOf<Int>()
-        for (i in input.indices) {
-            val values = input[i].split(" ")
-            list1.add(values[0].toInt())
-            list2.add(values[values.size - 1].toInt())
-        }
-        list1.sort()
-        list2.sort()
-        val pair = Pair(list1, list2)
-
+        val list = pairList(input)
         var sum = 0
-        for (i in 0..<1000) {
-            sum += abs(pair.first[i] - pair.second[i])
+        list.forEach {
+            sum += abs(it.first - it.second)
         }
         return sum
     }
 
     fun part2(input: List<String>): Int {
-        val list1 = mutableListOf<Int>()
-        val list2 = mutableListOf<Int>()
-        for (i in input.indices) {
-            val values = input[i].split(" ")
-            list1.add(values[0].toInt())
-            list2.add(values[values.size - 1].toInt())
-        }
-
+        val list = pairList(input)
+        val compareList = list.map { it.second }
         var score = 0
-        for (i in list1.indices) {
-            var similarity = 0
-            list2.forEach {
-                if (list1[i] == it) {
-                    similarity++
+        list.forEach { value ->
+            var equals = 0
+            compareList.forEach {
+                if (value.first == it) {
+                    equals++
                 }
             }
-            score += list1[i] * similarity
+            score += value.first * equals
         }
+
         return score
     }
 
