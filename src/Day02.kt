@@ -1,65 +1,53 @@
 import kotlin.math.abs
 
+private fun rowList(input: List<String>): List<MutableList<Int>> {
+    val list = mutableListOf<MutableList<Int>>()
+    input.forEach { line ->
+        val row = line.split(" ")
+        list.add(row.map { it.toInt() }.toMutableList())
+    }
+
+    return list
+}
+
+private fun isSafe(row: List<Int>): Boolean {
+    var increasing = 0
+    var decreasing = 0
+    for (i in 1..<row.size) {
+        val diference = abs(row[i] - row[i - 1])
+        if (row[i - 1] < row[i] && diference <= 3) {
+            increasing++
+        } else if (row[i - 1] > row[i] && diference <= 3) {
+            decreasing++
+        }
+    }
+    return increasing == row.size - 1 || decreasing == row.size - 1
+}
+
 fun main() {
 
     fun part1(input: List<String>): Int {
+        val list = rowList(input)
         var answer = 0
-        for (i in input.indices) {
-            val line = input[i].split(" ")
-            val lineInt = line.map { it.toInt() }
-            var increasing = 0
-            var decreasing = 0
-
-            for (j in 1..<lineInt.size) {
-                val diference = abs(lineInt[j] - lineInt[j - 1])
-                if (lineInt[j - 1] < lineInt[j] && diference <= 3) {
-                    increasing++
-                } else if (lineInt[j - 1] > lineInt[j] && diference <= 3) {
-                    decreasing++
-                }
-            }
-            if (increasing == lineInt.size - 1 || decreasing == lineInt.size - 1) answer++
+        for (i in list.indices) {
+            if (isSafe(list[i])) answer++
         }
         return answer
     }
 
     fun part2(input: List<String>): Int {
+        val list = rowList(input)
         var answer = 0
-        for (i in input.indices) {
-            val line = input[i].split(" ")
-            val lineInt = line.map { it.toInt() }.toMutableList()
-            var increasing = 0
-            var decreasing = 0
-
-            for (j in 1..<lineInt.size) {
-                val diference = abs(lineInt[j] - lineInt[j - 1])
-                if (lineInt[j - 1] < lineInt[j] && diference <= 3) {
-                    increasing++
-                } else if (lineInt[j - 1] > lineInt[j] && diference <= 3) {
-                    decreasing++
-                }
-            }
-            if (increasing == lineInt.size - 1 || decreasing == lineInt.size - 1) answer++
+        for (i in list.indices) {
+            if (isSafe(list[i])) answer++
             else {
-                increasing = 0
-                decreasing = 0
-                for (j in lineInt.indices) {
-                    val value = lineInt.removeAt(j)
-                    for (k in 1..<lineInt.size) {
-                        val diference = abs(lineInt[k] - lineInt[k - 1])
-                        if (lineInt[k - 1] < lineInt[k] && diference <= 3) {
-                            increasing++
-                        } else if (lineInt[k - 1] > lineInt[k] && diference <= 3) {
-                            decreasing++
-                        }
-                    }
-                    if (increasing == lineInt.size - 1 || decreasing == lineInt.size - 1) {
+                for (j in list[i].indices) {
+                    val value = list[i].removeAt(j)
+                    if (isSafe(list[i])) {
                         answer++
                         break
                     }
-                    increasing = 0
-                    decreasing = 0
-                    lineInt.add(j, value)
+                    list[i].add(j, value)
                 }
             }
         }

@@ -14,6 +14,7 @@ private fun pairList(input: List<String>): List<Pair<Int, Int>> {
 
 
 fun main() {
+
     fun part1(input: List<String>): Int {
         val list = pairList(input)
         var sum = 0
